@@ -10,7 +10,8 @@ class LLMMemory(RedisHandler):
     def __init__(self, connection: RedisHandler):
         self.redis_client = connection
 
-    def add(self,message, prefix="doc"):
+    def add(self,message: dict, prefix="doc"):
+
         """
         Add conversation interactions to the memory layer.
 
