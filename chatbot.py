@@ -88,9 +88,10 @@ if __name__ == "__main__":
             break
         llm_memory.add({"role": "user", "response": user_input})
 
-        messages = llm_memory.fetch(user_input)
+        history = llm_memory.fetch(user_input) 
 
         # Get assistant response
-        response_text = get_assistant_response(user_input, messages)
+        response_text = get_assistant_response(user_input, history)
+
         print(f'Assistant: {response_text}')
         llm_memory.add({"role": "assistant", "response": response_text})
