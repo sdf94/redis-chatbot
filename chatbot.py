@@ -15,7 +15,7 @@ try:
     redis_host = os.environ['HOST']
     redis_pass = os.environ['PASS']
 except KeyError:
-    print("We need a host, password, and port in order to login to Redis.")
+    print("We need a host and password in order to login to Redis.")
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -34,7 +34,7 @@ def setup_schema(redis_link) -> None:
     response = TextField(name="response") 
     response_embedding = VectorField("response_vector",
         "FLAT", {
-            "TYPE": "FLOAT32",
+            "TYPE": "FLOAT64",
             "DIM": VECTOR_DIM,
             "DISTANCE_METRIC": DISTANCE_METRIC,
         }
@@ -63,20 +63,22 @@ def get_assistant_response(user_prompt, context) -> str:
         Question: {user_prompt}
         Answer:
         '''
-    
+    print(context)
+    #edge case: history is empty
     if not context:
         context = [{"role": "user", "content": prompt}] 
-       
+    
     r = openai.chat.completions.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": m["role"], "content": m["content"]} for m in context],
+            messages=[{"role": m["role"], "content": m["response"]} for m in context],
         )
     response = r.choices[0].message.content
     return response
 
 
 if __name__ == "__main__":
-    redis_client = RedisHandler(host = redis_host, password = redis_pass)
+    #redis_client = RedisHandler(host = redis_host, password = redis_pass)
+    redis_client = RedisHandler(host = redis_host)
     redis_conn = redis_client.connect()
     setup_schema(redis_conn)
     llm_memory = LLMMemory(redis_conn)

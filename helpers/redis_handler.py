@@ -2,7 +2,7 @@ import redis
 
 
 class RedisHandler:
-    def __init__(self, host: str = 'localhost', port: int = 15528 , password: str = None) -> None:
+    def __init__(self, host: str = 'localhost', port: int = 6379 , password: str = None) -> None:
         self.host = host
         self.port = port
         self.password = password

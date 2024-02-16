@@ -58,7 +58,7 @@ class LLMMemory(RedisHandler):
                 .paging(0, k)
                 .dialect(2)
             )
-        params_dict = {"vector": np.array(embedded_query).astype(dtype=np.float32).tobytes()}
+        params_dict = {"vector": np.array(embedded_query).astype(dtype=np.float64).tobytes()}
 
         # perform vector search
         results = self.redis_client.ft(index_name).search(query, params_dict)
