@@ -65,7 +65,7 @@ def get_assistant_response(user_prompt, context):
         '''
     
     if not context:
-        messages = [{"role": "user", "content": prompt}] 
+        context = [{"role": "user", "content": prompt}] 
        
     r = openai.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -94,4 +94,3 @@ if __name__ == "__main__":
         response_text = get_assistant_response(user_input, messages)
         print(f'Assistant: {response_text}')
         llm_memory.add({"role": "assistant", "response": response_text})
-        
