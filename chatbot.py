@@ -7,9 +7,9 @@ from redis.commands.search.indexDefinition import (
 from redis.commands.search.field import (
     TextField,
     VectorField)
-from redis_handler import RedisHandler
-from llm_memory import LLMMemory
-from helper import display_chat_history
+from helpers.redis_handler import RedisHandler
+from helpers.llm_memory import LLMMemory
+from helpers.helper import display_chat_history
 
 try:
     redis_host = os.environ['HOST']
@@ -22,7 +22,7 @@ try:
 except KeyError:
     print("We need a openai API key")
 
-def setup_schema(redis_link):
+def setup_schema(redis_link) -> None:
     # Constants
     VECTOR_DIM = 1536
     INDEX_NAME = "embeddings-index"                 # name of the search index
@@ -52,7 +52,7 @@ def setup_schema(redis_link):
         )
 
 # Function to get the assistant's response
-def get_assistant_response(user_prompt, context):
+def get_assistant_response(user_prompt, context) -> str:
     prompt = f'''
 
         Use ONLY the context below to answer the question. If you do not know the answer, make something up.
@@ -84,14 +84,16 @@ if __name__ == "__main__":
     while True:
         # Get user input
         user_input = input("User: ")
-        if user_input == 'bye':
+        if user_input.lower() == 'bye':
             break
         llm_memory.add({"role": "user", "response": user_input})
 
-        history = llm_memory.fetch(user_input) 
+        history = llm_memory.fetch(user_input)
 
         # Get assistant response
         response_text = get_assistant_response(user_input, history)
 
         print(f'Assistant: {response_text}')
         llm_memory.add({"role": "assistant", "response": response_text})
+
+    display_chat_history(history)

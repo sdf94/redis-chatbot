@@ -2,15 +2,15 @@ import time
 import numpy as np
 from redis.commands.search.query import Query
 from typing import List
-from redis_handler import RedisHandler
-from helper import create_embedding
+from helpers.redis_handler import RedisHandler
+from helpers.helper import create_embedding
 
 
 class LLMMemory(RedisHandler):
-    def __init__(self, connection: RedisHandler):
+    def __init__(self, connection: RedisHandler) -> None:
         self.redis_client = connection
 
-    def add(self,message: dict, prefix="doc"):
+    def add(self,message: dict, prefix="doc") -> None:
 
         """
         Add conversation interactions to the memory layer.
@@ -64,7 +64,7 @@ class LLMMemory(RedisHandler):
         results = self.redis_client.ft(index_name).search(query, params_dict)
         return results.docs
    
-    def clear(self):
+    def clear(self) -> None:
         """
         Clear the memory layer.
         """
